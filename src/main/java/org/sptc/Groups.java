@@ -10,11 +10,10 @@ public class Groups {
 
     public Groups(List<String> participants) {
         Collections.shuffle(participants);
-        Groups groups = new Groups();
         for (String string: participants) {
-            groups.add(string);
+            add(string);
         }
-        groups.rejigger();
+        rejigger();
     }
 
     public Groups() {
@@ -67,5 +66,18 @@ public class Groups {
             }
         }
         return true;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (List<String> group:groups) {
+            for (String person :group) {
+                sb.append(person);
+                sb.append(System.getProperty("line.separator"));
+            }
+            sb.append(System.getProperty("line.separator"));
+        }
+        return sb.toString();
     }
 }

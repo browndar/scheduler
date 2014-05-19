@@ -64,6 +64,7 @@ public class SchedulerTest {
         for (int i=0; i < 100000; i++) {
             Groups groups = scheduler.buildGroups();
             assertTrue(groups.check(blacklist));
+            assertTrue(groups.groups.size() > 5);
             for (List<String> group:groups.groups) {
                 assertTrue(group.size() == 3 || group.size() == 4);
             }

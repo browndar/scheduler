@@ -2,6 +2,7 @@ package org.sptc;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 
@@ -24,9 +25,19 @@ public class Scheduler
     private PairSet blacklist;
 
 
-    public static void main( String[] args )
-    {
-        System.out.println( "Hello World!" );
+    public static void main( String[] args ) throws IOException {
+        System.out.println( "Reading particpants and blacklist" );
+        File participantsFile = new File(args[0]);
+        File blacklistFile = new File(args[1]);
+
+        URL url = Scheduler.class.getResource("/ignorelines.txt");
+        File ignorelinesFile = new File(url.getFile());
+
+        Scheduler scheduler = new Scheduler(participantsFile, blacklistFile, ignorelinesFile);
+        scheduler.initialize();
+        Groups groups = scheduler.buildGroups();
+        System.out.println("printing groups");
+        System.out.println(groups.toString());
     }
 
     public Scheduler(File participants, File blackList, File ignoreLines) {
