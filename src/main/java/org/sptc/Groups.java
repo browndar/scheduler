@@ -21,7 +21,7 @@ public class Groups {
 
     public void add(String person) {
         currentGroup.add(person);
-        if (currentGroup.size() == 4) {
+        if (currentGroup.size() == 5) {
             groups.add(currentGroup);
             currentGroup = new ArrayList<>();
         }
@@ -42,7 +42,8 @@ public class Groups {
         }
 
         if ((currentGroup.size() == 3) ||
-                (currentGroup.size() == 4)) {
+                (currentGroup.size() == 4) ||
+                (currentGroup.size() == 5)) {
             groups.add(currentGroup);
         }
     }

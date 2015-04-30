@@ -87,7 +87,8 @@ public class Scheduler
         notMembers.add("Abigail Blickle Webber");
         notMembers.add("Missa Laneous");
         notMembers.add("Remy Michaels");
-
+        notMembers.add("Donna Raphael");
+        notMembers.add("Amber Lynn Redig");
 
 
     }
@@ -123,22 +124,36 @@ public class Scheduler
 
     public List<String> readParticipants() throws IOException {
         List<String> lines = FileUtils.readLines(participantsFile);
+        List<String> cleanlinse = new ArrayList<String>();
+        boolean first = true;
         for (Iterator<String> lineIter = lines.iterator(); lineIter.hasNext();) {
             String line = lineIter.next();
-            line = line.trim();
-            line = line.replaceAll("\"", "");
-            if (line.isEmpty() || checkIgnore(line)) {
+            if (first) {
+                first = false;
                 lineIter.remove();
+            } else {
+                if (line.contains(",Going")) {
+                    line = line.replace(",Going", "");
+                    line = line.trim();
+                    line = line.replaceAll("\"", "");
+                    if (line.isEmpty() || checkIgnore(line)) {
+                        lineIter.remove();
+                    } else {
+                        cleanlinse.add(line);
+                    }
+                } else {
+                    lineIter.remove();
+                }
             }
         }
 
-        return lines;
+
+        return cleanlinse;
     }
 
     public List<String> readMembers() throws IOException {
         List<String> lines = FileUtils.readLines(membersFile);
         for (Iterator<String> lineIter = lines.iterator(); lineIter.hasNext();) {
-
             String line = lineIter.next();
             line = line.trim();
             line = line.replaceAll("\"", "");
@@ -149,9 +164,6 @@ public class Scheduler
 
         return lines;
     }
-
-
-
 
     public List<String> readIgnoreList() throws IOException {
         List<String> lines = FileUtils.readLines(ignoreLinesFile);
@@ -165,7 +177,7 @@ public class Scheduler
             String line = lineIter.next();
             line = line.trim();
             line = line.replaceAll("\"", "");
-            if (line.contains(",")) {
+            if (line.contains(",") && line.length() > 5) {
                 String[] pair = line.split(",");
                 pair[0] = pair[0].trim();
                 pair[1] = pair[1].trim();

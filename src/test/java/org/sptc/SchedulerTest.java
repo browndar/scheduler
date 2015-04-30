@@ -69,7 +69,7 @@ public class SchedulerTest {
             assertTrue(groups.check(blacklist));
             assertTrue(groups.groups.size() > 5);
             for (List<String> group:groups.groups) {
-                assertTrue(group.size() == 3 || group.size() == 4);
+                assertTrue(group.size() == 3 || group.size() == 4 || group.size() == 5);
             }
 
         }
