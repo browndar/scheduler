@@ -1,4 +1,12 @@
 Close FriendFriends
 FriendFriends
-mutual friends
+mutual friend
 Add Friend
+You invited her
+You invited
+works
+Works
+Joined
+joined
+Invited
+invited

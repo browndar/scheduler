@@ -19,6 +19,7 @@ public class SchedulerTest {
     File participantsFile;
     File blacklistFile;
     File ignorelinesFile;
+    File membersFile;
 
     @Before
     public void setup() {
@@ -28,11 +29,13 @@ public class SchedulerTest {
         blacklistFile = new File(url.getFile());
         url = this.getClass().getResource("/ignorelines.txt");
         ignorelinesFile = new File(url.getFile());
+        url = this.getClass().getResource("/members.txt");
+        membersFile = new File(url.getFile());
     }
 
     @Test
     public void testReadParticipants() throws IOException {
-        Scheduler scheduler = new Scheduler(participantsFile, blacklistFile, ignorelinesFile);
+        Scheduler scheduler = new Scheduler(participantsFile, blacklistFile, ignorelinesFile, membersFile);
         scheduler.initialize();
         List<String> participants = scheduler.readParticipants();
         assertEquals(34, participants.size());
@@ -40,7 +43,7 @@ public class SchedulerTest {
 
     @Test
     public void testReadBlackList() throws IOException {
-        Scheduler scheduler = new Scheduler(participantsFile, blacklistFile, ignorelinesFile);
+        Scheduler scheduler = new Scheduler(participantsFile, blacklistFile, ignorelinesFile, membersFile);
         scheduler.initialize();
         PairSet pairSet = scheduler.readBlackList();
         assertTrue(pairSet.contains(new PairSet.UnorderedPair("Melkor", "Elrond")));
@@ -49,7 +52,7 @@ public class SchedulerTest {
 
     @Test
     public void testBuildGroups() throws IOException {
-        Scheduler scheduler = new Scheduler(participantsFile, blacklistFile, ignorelinesFile);
+        Scheduler scheduler = new Scheduler(participantsFile, blacklistFile, ignorelinesFile, membersFile);
         scheduler.initialize();
 
         List<String> participants = scheduler.readParticipants();
