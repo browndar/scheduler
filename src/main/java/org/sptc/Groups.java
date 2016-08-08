@@ -29,6 +29,10 @@ public class Groups {
 
     public void rejigger() {
 
+        if (currentGroup.size() == 0) {
+            return;
+        }
+
         if (currentGroup.size() <= 2) {
             List<String> lastGroup = groups.get(groups.size() - 1);
             String last = lastGroup.remove(lastGroup.size() - 1);

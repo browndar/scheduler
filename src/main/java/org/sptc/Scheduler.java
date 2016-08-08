@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -80,22 +81,26 @@ public class Scheduler
 
     static ArrayList<String> notMembers = new ArrayList<String>();
     static {
-        notMembers.add("Laura Edelstein");
         notMembers.add("Anna Armstrong");
         notMembers.add("David Teachout");
-        notMembers.add("Eri Kardos");
-        notMembers.add("Abigail Blickle Webber");
         notMembers.add("Missa Laneous");
         notMembers.add("Remy Michaels");
         notMembers.add("Donna Raphael");
         notMembers.add("Amber Lynn Redig");
-
-
+        notMembers.add("Becky Brennan");
+        notMembers.add("Valkyrie Learn");
+        notMembers.add("Juanita Lynn");
+        notMembers.add("Sahar Manavi");
+        notMembers.add("Virginia Platt");
+        notMembers.add("Peter Truong");
+        notMembers.add("Roland Lindsay");
     }
 
     private boolean validateMembers() {
         boolean validated = true;
+        Collections.sort(members);
         for (String member: members) {
+            //System.out.println(member);
             if (notMembers.contains(member)) {
                 System.out.println("Member and not member: " + member);
                 validated = false;
@@ -147,9 +152,28 @@ public class Scheduler
             }
         }
 
+        System.out.print("Participants: " + cleanlinse.size());
 
         return cleanlinse;
-    }
+
+
+
+        /**List<String> cleanlinse = new ArrayList<String>();
+        for (Iterator<String> lineIter = lines.iterator(); lineIter.hasNext();) {
+            String line = lineIter.next();
+            if (line.isEmpty() || checkIgnore(line)) {
+                lineIter.remove();
+            } else {
+                line = line.replace(",Going", "");
+                line = line.trim();
+                line = line.replaceAll("\"", "");
+                if (!line.isEmpty())
+                    cleanlinse.add(line);
+            }
+        }
+
+        return cleanlinse; **/
+        }
 
     public List<String> readMembers() throws IOException {
         List<String> lines = FileUtils.readLines(membersFile);
@@ -201,6 +225,7 @@ public class Scheduler
     }
 
     public Groups buildGroups() {
+        System.out.println("participants: " + participants.size());
         while(true) {
             Groups groups = new Groups(participants);
 
