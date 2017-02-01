@@ -22,12 +22,13 @@ public class Scheduler
     public File blackListFile;
     public File ignoreLinesFile;
     public File membersFile;
+    public File nonMembersFile;
 
     List<String> ignoreLines;
     List<String> participants;
     List<String> members;
+    List<String> nonMembers;
     private PairSet blacklist;
-
 
     public static void main( String[] args ) throws IOException {
         System.out.println( "Reading particpants and blacklist" );
@@ -40,30 +41,33 @@ public class Scheduler
         URL url = Scheduler.class.getResource("/ignorelines.txt");
         File ignorelinesFile = new File(url.getFile());
 
+        File nonMembersFile = new File("target/notmembers.txt");
 
-
-        Scheduler scheduler = new Scheduler(participantsFile, blacklistFile, ignorelinesFile, members);
+        Scheduler scheduler = new Scheduler(participantsFile, blacklistFile, ignorelinesFile, members, nonMembersFile);
         scheduler.initialize();
         Groups groups = scheduler.buildGroups();
         System.out.println("printing groups");
         System.out.println(groups.toString());
     }
 
-    public Scheduler(File participants, File blackList, File ignoreLines, File members) {
+    public Scheduler(File participants, File blackList, File ignoreLines, File members, File nonMembers) {
         this.participantsFile = participants;
         this.blackListFile = blackList;
         this.ignoreLinesFile = ignoreLines;
         this.membersFile = members;
+        this.nonMembersFile = nonMembers;
     }
 
-    private Scheduler(File participants, File blackList, File members) {
-        this(participants, blackList, new File(DEFAULT_IGNORE_LINES), members);
+    Scheduler(File participants, File blackList, File members, File nonMembers) {
+        this(participants, blackList, new File(DEFAULT_IGNORE_LINES), members, nonMembers);
     }
 
     public void initialize() throws IOException {
         this.ignoreLines = readIgnoreList();
         this.participants = readParticipants();
         this.members = readMembers();
+        this.nonMembers = readNonMembers();
+        notMembers.addAll(nonMembers);
         this.blacklist = readBlackList();
 
         System.out.println("validating memberst");
@@ -78,23 +82,7 @@ public class Scheduler
 
     }
 
-
     static ArrayList<String> notMembers = new ArrayList<String>();
-    static {
-        notMembers.add("Anna Armstrong");
-        notMembers.add("David Teachout");
-        notMembers.add("Missa Laneous");
-        notMembers.add("Remy Michaels");
-        notMembers.add("Donna Raphael");
-        notMembers.add("Amber Lynn Redig");
-        notMembers.add("Becky Brennan");
-        notMembers.add("Valkyrie Learn");
-        notMembers.add("Juanita Lynn");
-        notMembers.add("Sahar Manavi");
-        notMembers.add("Virginia Platt");
-        notMembers.add("Peter Truong");
-        notMembers.add("Roland Lindsay");
-    }
 
     private boolean validateMembers() {
         boolean validated = true;
@@ -177,6 +165,20 @@ public class Scheduler
 
     public List<String> readMembers() throws IOException {
         List<String> lines = FileUtils.readLines(membersFile);
+        for (Iterator<String> lineIter = lines.iterator(); lineIter.hasNext();) {
+            String line = lineIter.next();
+            line = line.trim();
+            line = line.replaceAll("\"", "");
+            if (line.isEmpty() || checkIgnore(line)) {
+                lineIter.remove();
+            }
+        }
+
+        return lines;
+    }
+
+    public List<String> readNonMembers() throws IOException {
+        List<String> lines = FileUtils.readLines(nonMembersFile);
         for (Iterator<String> lineIter = lines.iterator(); lineIter.hasNext();) {
             String line = lineIter.next();
             line = line.trim();
