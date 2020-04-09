@@ -52,7 +52,7 @@ public class Groups {
         }
     }
 
-    public boolean check(PairSet blacklist) {
+    public boolean check(Blacklist blacklist) {
         for (List<String> group:groups) {
             if (!check(group, blacklist)) {
                 return false;
@@ -62,10 +62,10 @@ public class Groups {
         return true;
     }
 
-    private boolean check(List<String> group, PairSet blacklist) {
+    private boolean check(List<String> group, Blacklist blacklist) {
         for(String first:group) {
             for(String second: group) {
-                if (blacklist.contains(new PairSet.UnorderedPair(first, second))) {
+                if (blacklist.blacklisted(first, second)) {
                     return false;
                 }
             }

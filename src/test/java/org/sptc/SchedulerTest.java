@@ -6,8 +6,11 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.security.GeneralSecurityException;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.javatuples.Pair;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,55 +19,22 @@ import org.junit.Test;
  */
 public class SchedulerTest {
 
-    File participantsFile;
-    File blacklistFile;
-    File ignorelinesFile;
-    File membersFile;
-
-    @Before
-    public void setup() {
-        URL url = this.getClass().getResource("/participants.txt");
-        participantsFile = new File(url.getFile());
-        url = this.getClass().getResource("/blacklist.txt");
-        blacklistFile = new File(url.getFile());
-        url = this.getClass().getResource("/ignorelines.txt");
-        ignorelinesFile = new File(url.getFile());
-        url = this.getClass().getResource("/members.txt");
-        membersFile = new File(url.getFile());
-    }
 
     @Test
-    public void testReadParticipants() throws IOException {
-        Scheduler scheduler = new Scheduler(participantsFile, blacklistFile, ignorelinesFile, membersFile);
-        scheduler.initialize();
-        List<String> participants = scheduler.readParticipants();
-        assertEquals(34, participants.size());
-    }
+    public void testBuildGroups() throws IOException, GeneralSecurityException {
+        String march = "1gplLj4vpJhPN_MppbT1_j1-ZZujPR2UQcfNpP2mTT9Q";
 
-    @Test
-    public void testReadBlackList() throws IOException {
-        Scheduler scheduler = new Scheduler(participantsFile, blacklistFile, ignorelinesFile, membersFile);
-        scheduler.initialize();
-        PairSet pairSet = scheduler.readBlackList();
-        assertTrue(pairSet.contains(new PairSet.UnorderedPair("Melkor", "Elrond")));
-        assertTrue(pairSet.contains(new PairSet.UnorderedPair("Elrond", "Melkor")));
-    }
 
-    @Test
-    public void testBuildGroups() throws IOException {
-        Scheduler scheduler = new Scheduler(participantsFile, blacklistFile, ignorelinesFile, membersFile);
-        scheduler.initialize();
+       Pair<ArrayList<String>, ArrayList<Pair<String, String>>> participantsAndBlacklist = FormDownloader.getParticipants(
+                march);
 
-        List<String> participants = scheduler.readParticipants();
-        PairSet blacklist = scheduler.readBlackList();
-        boolean violating = false;
+        ArrayList<String> participants = participantsAndBlacklist.getValue0();
+        Blacklist blacklist = new Blacklist(participantsAndBlacklist.getValue1());
 
-        while (!violating) {
-            Groups groups = new Groups(participants);
-            violating = groups.check(blacklist);
-        }
+       Scheduler scheduler = new Scheduler(participants, blacklist);
+        System.out.println(scheduler.buildGroups());
 
-        for (int i=0; i < 100000; i++) {
+        /*for (int i=0; i < 100000; i++) {
             Groups groups = scheduler.buildGroups();
             assertTrue(groups.check(blacklist));
             assertTrue(groups.groups.size() > 5);
@@ -72,6 +42,6 @@ public class SchedulerTest {
                 assertTrue(group.size() == 3 || group.size() == 4 || group.size() == 5);
             }
 
-        }
+        }*/
     }
 }
