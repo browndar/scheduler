@@ -19,6 +19,20 @@ import org.junit.Test;
  */
 public class SchedulerTest {
 
+    @Test
+    public void testApril() throws IOException, GeneralSecurityException {
+        String april = "1Y59UkNDNgZL83Cp8SzXGyY3Vj6JMBNYipzS__DTq3ug";
+
+        Pair<ArrayList<String>, ArrayList<Pair<String, String>>> participantsAndBlacklist = FormDownloader.getParticipants(
+                april);
+
+        ArrayList<String> participants = participantsAndBlacklist.getValue0();
+        Blacklist blacklist = new Blacklist(participantsAndBlacklist.getValue1());
+
+        Scheduler scheduler = new Scheduler(participants, blacklist);
+        System.out.println(scheduler.buildGroups());
+
+    }
 
     @Test
     public void testBuildGroups() throws IOException, GeneralSecurityException {
