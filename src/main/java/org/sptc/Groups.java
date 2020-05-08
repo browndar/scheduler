@@ -8,12 +8,47 @@ public class Groups {
     List<List<String>> groups = new ArrayList<>();
     List<String> currentGroup = new ArrayList<>();
 
+    /**
+     * if len(ids) < 6:
+     print("Just one group this month.")
+
+     while len(ids) % 4 != 0:
+     pods.append([ids.pop(), ids.pop(), ids.pop()])
+
+     while len(ids) != 0:
+     pods.append([ids.pop(), ids.pop(), ids.pop(), ids.pop()])
+
+     print(pods)
+     * @param participants
+     */
+
+
+
     public Groups(List<String> participants) {
         Collections.shuffle(participants);
-        for (String string: participants) {
-            add(string);
+
+        if (participants.size() < 6) {
+            currentGroup.addAll(participants);
+            groups.add(currentGroup);
+            return;
         }
-        rejigger();
+
+        while (participants.size() % 4 != 0) {
+            currentGroup.add(participants.remove(0));
+            currentGroup.add(participants.remove(0));
+            currentGroup.add(participants.remove(0));
+            groups.add(currentGroup);
+            currentGroup = new ArrayList<>();
+        }
+
+        while (participants.size() > 0) {
+            currentGroup.add(participants.remove(0));
+            currentGroup.add(participants.remove(0));
+            currentGroup.add(participants.remove(0));
+            currentGroup.add(participants.remove(0));
+            groups.add(currentGroup);
+            currentGroup = new ArrayList<>();
+        }
     }
 
     public Groups() {
@@ -24,31 +59,6 @@ public class Groups {
         if (currentGroup.size() == 5) {
             groups.add(currentGroup);
             currentGroup = new ArrayList<>();
-        }
-    }
-
-    public void rejigger() {
-
-        if (currentGroup.size() == 0) {
-            return;
-        }
-
-        if (currentGroup.size() <= 2) {
-            List<String> lastGroup = groups.get(groups.size() - 1);
-            String last = lastGroup.remove(lastGroup.size() - 1);
-            currentGroup.add(last);
-        }
-
-        if (currentGroup.size() <= 2) {
-            List<String> secondToLastGroup = groups.get(groups.size() - 2);
-            String last = secondToLastGroup.remove(secondToLastGroup.size() -1);
-            currentGroup.add(last);
-        }
-
-        if ((currentGroup.size() == 3) ||
-                (currentGroup.size() == 4) ||
-                (currentGroup.size() == 5)) {
-            groups.add(currentGroup);
         }
     }
 
